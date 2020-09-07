@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './css/App.css';
+import './css/App.scss';
 
 class App extends Component {
   constructor() {
@@ -22,6 +22,10 @@ class App extends Component {
 
     return (
       <form>
+        <h3>
+          Some text in h3 <span>span within h3</span>
+        </h3>
+        <span>span outside h3</span>
         <input
           data-testid="test-id"
           type="text"
