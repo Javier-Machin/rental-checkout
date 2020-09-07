@@ -1,13 +1,8 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 class App extends Component {
   constructor() {
     super();
-
-    this.state = {
-      value: "",
-    };
-
     this.handleChange = this.handleChange.bind(this);
   }
 

@@ -1,6 +1,6 @@
-import App from "./App";
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
 
-const wrapper = document.getElementById("root");
-wrapper && ReactDOM.render(<App />, wrapper);
+const root = document.getElementById('root');
+ReactDOM.render(<App />, root);
