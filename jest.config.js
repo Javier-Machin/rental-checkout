@@ -4,8 +4,6 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!<rootDir>/node_modules/',
-    '!<rootDir>/src/serviceWorker.js',
-    '!<rootDir>/src/components/mockHelpers/index.js',
     '!<rootDir>/src/tests/helpers/index.js',
     '!<rootDir>/src/index.js',
   ],
