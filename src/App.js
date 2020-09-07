@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 class App extends Component {
   constructor() {
     super();
+    this.state = { value: '' };
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -20,7 +21,12 @@ class App extends Component {
 
     return (
       <form>
-        <input type="text" value={value} onChange={this.handleChange} />
+        <input
+          data-testid="test-id"
+          type="text"
+          value={value}
+          onChange={this.handleChange}
+        />
       </form>
     );
   }
