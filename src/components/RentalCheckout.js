@@ -13,7 +13,7 @@ class RentalCheckout extends PureComponent {
             <NumericField
               min="1"
               max="10"
-              name="teens"
+              name="kids"
               label="Under 16s going"
             />
             <NumericField
