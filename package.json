@@ -10,7 +10,7 @@
     "test-watch": "jest --coverage --watchAll=true"
   },
   "keywords": [],
-  "author": "",
+  "author": "Javier Machin",
   "engines": {
     "node": "13.14.0"
   },

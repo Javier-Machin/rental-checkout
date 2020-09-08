@@ -1,40 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
+import RentalCheckout from './components/RentalCheckout';
 import './css/App.scss';
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = { value: '' };
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(event) {
-    const { value } = event.target;
-    this.setState(() => {
-      return {
-        value,
-      };
-    });
-  }
-
-  render() {
-    const { value } = this.state;
-
-    return (
-      <form>
-        <h3>
-          Some text in h3 <span>span within h3</span>
-        </h3>
-        <span>span outside h3</span>
-        <input
-          data-testid="test-id"
-          type="text"
-          value={value}
-          onChange={this.handleChange}
-        />
-      </form>
-    );
-  }
-}
+const App = () => {
+  return (
+    <main className="main-container">
+      <RentalCheckout />
+    </main>
+  );
+};
 
 export default App;
