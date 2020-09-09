@@ -7,10 +7,12 @@ function isInRange(num, start, end) {
 
 function checkDateAvailability(date, availableDates) {
   return availableDates.some((availabilityWindow) => {
+    const year = date.getFullYear();
     const month = date.getMonth();
     const day = date.getDate();
 
     return (
+      year === availabilityWindow.year &&
       month === availabilityWindow.month &&
       isInRange(day, availabilityWindow.from, availabilityWindow.to)
     );
@@ -18,7 +20,7 @@ function checkDateAvailability(date, availableDates) {
 }
 
 function renderCalendarBody() {
-  const { selectedDate: date, availableDates } = this.props;
+  const { calendarDate: date, availableDates, handleCellOnClick } = this.props;
   const cells = [];
 
   const month = date.getMonth();
@@ -28,15 +30,16 @@ function renderCalendarBody() {
   // We keep updating this date as we loop through the days of the month
   const tempDate = firstDayOfMonth;
 
-  for (let row = 0; row < 5; row += 1) {
+  for (let row = 0; row < 6; row += 1) {
     for (let weekDay = 1; weekDay < 8; weekDay += 1) {
       const beforeFirstDay = row === 0 && weekDay < firstDayOfMonth.getDay();
-      const pastLastDay = tempDate.getMonth() > month;
+      const pastLastDay =
+        tempDate.getMonth() > month || tempDate.getFullYear() > year;
 
       if (beforeFirstDay || pastLastDay) {
         cells.push(
           <span className="calendar__empty-cell" key={`${row}${weekDay}`}>
-            -
+            &nbsp;
           </span>,
         );
       } else {
@@ -53,7 +56,7 @@ function renderCalendarBody() {
           <button
             className={cellClasses}
             type="button"
-            onClick={this.handleCellOnClick}
+            onClick={handleCellOnClick}
             name={tempDateValue}
             key={`${row}${weekDay}`}
           >
@@ -69,10 +72,10 @@ function renderCalendarBody() {
 }
 
 function currentMonthAndYear() {
-  const { selectedDate } = this.props;
+  const { calendarDate } = this.props;
 
-  const year = selectedDate.getFullYear();
-  const monthName = selectedDate.toLocaleString('default', {
+  const year = calendarDate.getFullYear();
+  const monthName = calendarDate.toLocaleString('default', {
     month: 'long',
   });
 

@@ -9,16 +9,33 @@
 
   &__cells {
     display: grid;
-    grid-template-rows: 1fr repeat(5, 2fr);
+    grid-template-rows: 1fr repeat(6, 2fr);
     grid-template-columns: repeat(7, 1fr);
     height: 250px;
   }
 
   &__empty-cell {
-    margin-top: 12px;
+    user-select: none;
+  }
+
+  &__cell-btn {
+    pointer-events: none;
   }
 
   &__cell-btn--available {
     background-color: lightgreen;
+    pointer-events: unset;
+    cursor: pointer;
+  }
+
+  &__arrows {
+    display: flex;
+    justify-content: space-evenly;
+    max-width: 150px;
+    margin: 0 auto 10px auto;
+  }
+
+  &__arrow {
+    cursor: pointer;
   }
 }
