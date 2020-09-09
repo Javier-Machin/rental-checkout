@@ -1,17 +1,24 @@
 .calendar {
-  display: grid;
-  grid-template-rows: 1fr repeat(5, 2fr);
-  grid-template-columns: repeat(7, 1fr);
-  height: 250px;
+  height: 300px;
   background-color: white;
   text-align: center;
   letter-spacing: 1px;
   vertical-align: middle;
   font-size: 12px;
   text-transform: uppercase;
-  margin: 0.75rem;
 
-  &__day-of-week {
-    margin-top: 5px;
+  &__cells {
+    display: grid;
+    grid-template-rows: 1fr repeat(5, 2fr);
+    grid-template-columns: repeat(7, 1fr);
+    height: 250px;
+  }
+
+  &__empty-cell {
+    margin-top: 12px;
+  }
+
+  &__cell-btn--available {
+    background-color: lightgreen;
   }
 }

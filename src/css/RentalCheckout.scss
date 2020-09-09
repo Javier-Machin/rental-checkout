@@ -4,12 +4,16 @@
   background: lightblue;
   margin: 0 auto;
   border-radius: 5px;
+  padding: 0.75rem;
 
   &__form {
     .numeric-fields {
       display: grid;
       grid-template-rows: repeat(5, 1fr);
       grid-template-columns: repeat(2, 1fr);
+      row-gap: 5px;
+      column-gap: 10px;
+      margin-bottom: 10px;
     }
   }
 }
