@@ -1,0 +1,11 @@
+.time-picker {
+  margin-top: 1rem;
+  grid-template-rows: repeat(8, 1fr);
+  grid-template-columns: 1fr;
+
+  &__hour-block {
+    height: 100px;
+    margin-top: 5px;
+    background-color: white;
+  }
+}

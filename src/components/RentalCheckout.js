@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NumericField from './NumericField';
 import Calendar from './calendar';
+import TimePicker from './TimePicker';
 import '../css/RentalCheckout.scss';
 
 class RentalCheckout extends Component {
@@ -96,6 +97,7 @@ class RentalCheckout extends Component {
               { year: 2020, month: 9, from: 5, to: 9 },
             ]}
           />
+          <TimePicker />
         </form>
       </aside>
     );
