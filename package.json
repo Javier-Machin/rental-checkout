@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "homepage": "https://javier-machin.github.io/rental-checkout",
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
     "build": "webpack --mode production",
     "test": "jest --coverage",
-    "test-watch": "jest --coverage --watchAll=true"
+    "test-watch": "jest --coverage --watchAll=true",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "Javier Machin",
@@ -50,6 +53,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
+    "gh-pages": "^3.1.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
