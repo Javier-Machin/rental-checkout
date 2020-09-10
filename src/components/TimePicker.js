@@ -15,14 +15,11 @@ class TimePicker extends PureComponent {
     this.handleHourFractionOnClick = this.handleHourFractionOnClick.bind(this);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   handleHourFractionOnClick({ target }) {
     const isAvailable = target.className.includes('available');
     if (!isAvailable) return;
 
     const { selectedHours } = this.state;
-    console.log(target.dataset.fractionnum);
-    console.log(target.textContent);
     // Validate if it's going to exceed maximum booking time
     // (please select a time within {limitTime} hours from initial selection)
 
@@ -33,16 +30,15 @@ class TimePicker extends PureComponent {
     // (please select a time without unavailable hours in the middle)
 
     // const startSelection if offset set to target, otherwise to first in block hour
-    // call selectHourFractions
-    const fromFractionNum = target.dataset.fractionnum;
+    const selectingFractionNum = Number(target.dataset.fractionnum);
 
     if (!selectedHours) {
-      const minFractions = this.blocksToFractions(2);
-      const toFraction = Number(fromFractionNum) + Number(minFractions - 1);
+      const minFractions = this.blocksToFractions(2); // replace hardcoded value with prop
+      const toFraction = selectingFractionNum + minFractions - 1;
 
       const updatedSelectedHours = {
         from: {
-          fractionNum: fromFractionNum,
+          fractionNum: selectingFractionNum,
         },
         to: {
           fractionNum: toFraction,
@@ -52,17 +48,55 @@ class TimePicker extends PureComponent {
       this.setState({
         selectedHours: updatedSelectedHours,
       });
+      return;
+    }
+
+    const selectingCurrentStart =
+      selectedHours.from.fractionNum === selectingFractionNum;
+
+    if (selectingCurrentStart) {
+      this.setState({ selectedHours: null });
+      return;
+    }
+
+    const selectingBeforeCurrentStart =
+      selectedHours.from.fractionNum > selectingFractionNum;
+
+    if (selectingBeforeCurrentStart) {
+      const updatedSelectedHours = {
+        from: {
+          fractionNum: selectingFractionNum,
+        },
+        to: {
+          fractionNum: selectedHours.to.fractionNum,
+        },
+      };
+
+      console.log(updatedSelectedHours);
+
+      this.setState({ selectedHours: updatedSelectedHours });
+      return;
+    }
+
+    const selectingAfterCurrentStart =
+      selectedHours.from.fractionNum < selectingFractionNum;
+
+    if (selectingAfterCurrentStart) {
+      const updatedSelectedHours = {
+        from: {
+          fractionNum: selectedHours.from.fractionNum,
+        },
+        to: {
+          fractionNum: selectingFractionNum,
+        },
+      };
+
+      this.setState({ selectedHours: updatedSelectedHours });
     }
   }
 
   checkHoursSelected(selectedhours, fractionNum) {
     if (!selectedhours) return false;
-
-    console.log(
-      fractionNum,
-      selectedhours.from.fractionNum,
-      selectedhours.to.fractionNum,
-    );
 
     return this.isInRange(
       fractionNum,
