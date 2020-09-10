@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import NumericField from './NumericField';
 import Calendar from './Calendar';
-import TimePicker from './TimePicker/TimePicker';
+import TimePicker from './TimePicker';
 import { fractionNumToTime } from './TimePicker/helpers';
 import { addMinutesToDate } from '../helpers';
 
@@ -121,13 +121,12 @@ class RentalCheckout extends Component {
       timePickerVisible,
     } = this.state;
 
-    // TODO: add a few tests
-
     return (
       <aside className="rental-checkout">
         {this.renderValidationErrors()}
         <form
           className="rental-checkout__form"
+          data-testid="rental-checkout-form"
           onSubmit={this.handleFormSubmit}
         >
           <div className="input-fields">
