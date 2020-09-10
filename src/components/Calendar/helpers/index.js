@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import isInRange from '../../../helpers';
+import { isInRange } from '../../../helpers';
 
 // Helpers specific to the calendar
 

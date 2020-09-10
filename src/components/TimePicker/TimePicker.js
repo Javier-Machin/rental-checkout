@@ -1,24 +1,24 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import isInRange from '../../helpers';
-import { validateHoursSelection } from './helpers';
+import {
+  validateHoursSelection,
+  updateHoursSelection,
+  checkHoursSelected,
+  checkHoursAvailability,
+  SHIFT_START_TIME,
+  SHIFT_END_TIME,
+  HOUR_BLOCK_FRACTIONS,
+} from './helpers';
 import '../../css/TimePicker.scss';
-
-// Let's pretend the service is open from 10:00 AM to 6:00 PM
-const SHIFT_START_TIME = 10;
 
 class TimePicker extends PureComponent {
   constructor(props) {
     super(props);
 
     this.handleHourFractionOnClick = this.handleHourFractionOnClick.bind(this);
+    this.updateHoursSelection = updateHoursSelection.bind(this);
     this.validateHoursSelection = validateHoursSelection.bind(this);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  addHoursToDate(date, hours) {
-    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
   }
 
   handleHourFractionOnClick({ target }) {
@@ -43,133 +43,32 @@ class TimePicker extends PureComponent {
     }
   }
 
-  updateHoursSelection(selectingFractionNum, selectedHours) {
-    const { minHours } = this.props;
-
-    if (!selectedHours) {
-      const minFractions = this.blocksToFractions(minHours);
-      const toFraction = selectingFractionNum + minFractions - 1;
-
-      return {
-        from: {
-          fractionNum: selectingFractionNum,
-        },
-        to: {
-          fractionNum: toFraction,
-        },
-      };
-    }
-
-    const selectingCurrentStart =
-      selectedHours.from.fractionNum === selectingFractionNum;
-
-    if (selectingCurrentStart) {
-      return null;
-    }
-
-    const selectingBeforeCurrentStart =
-      selectedHours.from.fractionNum > selectingFractionNum;
-
-    if (selectingBeforeCurrentStart) {
-      return {
-        from: {
-          fractionNum: selectingFractionNum,
-        },
-        to: {
-          fractionNum: selectedHours.to.fractionNum,
-        },
-      };
-    }
-
-    const selectingAfterCurrentStart =
-      selectedHours.from.fractionNum < selectingFractionNum;
-
-    if (selectingAfterCurrentStart) {
-      return {
-        from: {
-          fractionNum: selectedHours.from.fractionNum,
-        },
-        to: {
-          fractionNum: selectingFractionNum,
-        },
-      };
-    }
-
-    return null;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  fractionNumToTime(fractionNum) {
-    const tempDate = new Date();
-    tempDate.setMinutes(0);
-    tempDate.setHours(SHIFT_START_TIME);
-
-    // Minutes in the provided fraction
-    // - 1 to account for the 10 minutes of the last fraction
-    const minutes = (fractionNum - 1) * 10;
-
-    const fractionTime = new Date(tempDate.getTime() + minutes * 60000);
-    return fractionTime;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  checkHoursSelected(selectedhours, fractionNum) {
-    if (!selectedhours) return false;
-
-    return isInRange(
-      fractionNum,
-      selectedhours.from.fractionNum,
-      selectedhours.to.fractionNum,
-    );
-  }
-
-  // Simple but helps with readability
-  // eslint-disable-next-line class-methods-use-this
-  blocksToFractions(blocks) {
-    return blocks * 6;
-  }
-
-  // Simple but helps with readability
-  // eslint-disable-next-line class-methods-use-this
-  fractionsToBlocks(fractions) {
-    return (fractions + 1) / 6;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  checkHoursAvailability(selectedDate, hour, availableHours) {
-    if (!selectedDate) return false;
-    const month = selectedDate.getMonth();
-
-    return availableHours.some((availabilityWindow) => {
-      return (
-        month === availabilityWindow.month &&
-        isInRange(hour, availabilityWindow.from, availabilityWindow.to)
-      );
-    });
-  }
-
   renderTimePickerBody() {
     const { availableHours, selectedDate, selectedHours } = this.props;
-
     const hourBlocks = [];
+    const shiftLength = SHIFT_END_TIME - SHIFT_START_TIME;
     let totalFractions = 0;
 
-    for (let shiftHour = 0; shiftHour < 8; shiftHour += 1) {
+    for (let shiftHour = 0; shiftHour < shiftLength; shiftHour += 1) {
       const hourBlockFractions = [];
 
-      for (let hourFraction = 0; hourFraction < 6; hourFraction += 1) {
+      for (
+        let hourFraction = 0;
+        hourFraction < HOUR_BLOCK_FRACTIONS;
+        hourFraction += 1
+      ) {
         const hour = `${SHIFT_START_TIME + shiftHour}`;
         const minutes = String(hourFraction).padEnd(2, '0');
         totalFractions += 1;
 
         const fractionClass = classnames({
           'time-picker__hour-fraction--with-offset': true,
-          'time-picker__hour-fraction--available': this.checkHoursAvailability(
+          'time-picker__hour-fraction--available': checkHoursAvailability(
             selectedDate,
             hour,
             availableHours,
           ),
-          'time-picker__hour-fraction--selected': this.checkHoursSelected(
+          'time-picker__hour-fraction--selected': checkHoursSelected(
             selectedHours,
             totalFractions,
           ),
@@ -210,15 +109,16 @@ TimePicker.defaultProps = {
 };
 
 /*
-  disabling eslint check for some props because it doesn't know 
+  Disabling eslint check for some props because it doesn't know 
   about our tidy helpers folder (:
 */
+
+/* eslint-disable react/no-unused-prop-types */
 
 TimePicker.propTypes = {
   setValidationErrors: PropTypes.func.isRequired,
   setSelectedHours: PropTypes.func.isRequired,
   minHours: PropTypes.number,
-  // eslint-disable-next-line react/no-unused-prop-types
   maxHours: PropTypes.number,
   availableHours: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedDate: PropTypes.object.isRequired,
