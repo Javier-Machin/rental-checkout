@@ -24,7 +24,10 @@ class RentalCheckout extends Component {
 
   handleCalendarCellOnClick({ target }) {
     const dateIsAvailable = target.className.includes('available');
-    if (!dateIsAvailable) return;
+    if (!dateIsAvailable) {
+      this.setState({ selectedDate: null, timePickerVisible: false });
+      return;
+    }
 
     const { calendarDate } = this.state;
     const newSelectedDate = new Date();
@@ -33,7 +36,11 @@ class RentalCheckout extends Component {
     newSelectedDate.setMonth(calendarDate.getMonth());
     newSelectedDate.setDate(Number(target.name));
 
-    this.setState({ selectedDate: newSelectedDate });
+    this.setState({
+      selectedDate: newSelectedDate,
+      calendarVisible: false,
+      timePickerVisible: true,
+    });
   }
 
   handleCalendarArrowOnClick({ target }) {
@@ -49,7 +56,14 @@ class RentalCheckout extends Component {
   }
 
   render() {
-    const { selectedDate, calendarDate } = this.state;
+    const {
+      selectedDate,
+      calendarDate,
+      calendarVisible,
+      timePickerVisible,
+    } = this.state;
+
+    // TODO: implement TextField
 
     return (
       <aside className="rental-checkout">
@@ -89,6 +103,7 @@ class RentalCheckout extends Component {
           <Calendar
             selectedDate={selectedDate}
             calendarDate={calendarDate}
+            calendarVisible={calendarVisible}
             handleCalendarCellOnClick={this.handleCalendarCellOnClick}
             handleCalendarArrowOnClick={this.handleCalendarArrowOnClick}
             availableDates={[
@@ -97,7 +112,7 @@ class RentalCheckout extends Component {
               { year: 2020, month: 9, from: 5, to: 9 },
             ]}
           />
-          <TimePicker selectedDate={selectedDate} />
+          {timePickerVisible && <TimePicker selectedDate={selectedDate} />}
         </form>
       </aside>
     );

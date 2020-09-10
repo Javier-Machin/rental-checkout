@@ -10,9 +10,32 @@ class TimePicker extends PureComponent {
     super(props);
     this.state = {
       selectedHours: null,
+      validationErrors: [],
     };
 
     this.handleHourFractionOnClick = this.handleHourFractionOnClick.bind(this);
+    this.validateHoursSelection = this.validateHoursSelection.bind(this);
+  }
+
+  validateHoursSelection(updatedSelectedHours) {
+    if (!updatedSelectedHours) return true;
+    const { minHours = 2, maxHours = 4 } = this.props;
+
+    const totalFractionsSelected =
+      updatedSelectedHours.to.fractionNum -
+      updatedSelectedHours.from.fractionNum;
+
+    const totalHoursSelected = this.fractionsToBlocks(totalFractionsSelected);
+
+    const exceedsShiftHours = totalHoursSelected > maxHours;
+
+    if (exceedsShiftHours) {
+      const errorMessage = `Exceeds maximum booking time, please select a time within ${maxHours} hours from the start`;
+      this.setState({ validationErrors: [errorMessage] });
+      return false;
+    }
+
+    return true;
   }
 
   handleHourFractionOnClick({ target }) {
@@ -20,23 +43,40 @@ class TimePicker extends PureComponent {
     if (!isAvailable) return;
 
     const { selectedHours } = this.state;
-    // Validate if it's going to exceed maximum booking time
-    // (please select a time within {limitTime} hours from initial selection)
-
-    // Validate if clicked time plus minimum booking time will exceed shift time
-    // (please select a time at least {limitTime} hours earlier than 18:00)
-
-    // Validate if between the start time and the clicked hour any non-available hours exist
-    // (please select a time without unavailable hours in the middle)
-
-    // const startSelection if offset set to target, otherwise to first in block hour
     const selectingFractionNum = Number(target.dataset.fractionnum);
 
+    // TODO: Validate if clicked time is start time and if it plus minimum booking time will exceed shift time
+    // (please select a time at least {limitTime} hours earlier than 18:00)
+
+    // TODO: Validate if between the start time and the clicked hour any non-available hours exist
+    // (please select a time without unavailable hours in the middle)
+
+    // TODO: const startSelection if offset set to target, otherwise to first in block hour
+
+    const updatedSelectedHours = this.updateHoursSelection(
+      selectingFractionNum,
+      selectedHours,
+    );
+
+    const selectedHoursAreValid = this.validateHoursSelection(
+      updatedSelectedHours,
+    );
+
+    if (selectedHoursAreValid) {
+      this.setState({
+        selectedHours: updatedSelectedHours,
+      });
+    }
+  }
+
+  updateHoursSelection(selectingFractionNum, selectedHours) {
+    const { minHours = 2 } = this.props;
+
     if (!selectedHours) {
-      const minFractions = this.blocksToFractions(2); // replace hardcoded value with prop
+      const minFractions = this.blocksToFractions(minHours);
       const toFraction = selectingFractionNum + minFractions - 1;
 
-      const updatedSelectedHours = {
+      return {
         from: {
           fractionNum: selectingFractionNum,
         },
@@ -44,26 +84,20 @@ class TimePicker extends PureComponent {
           fractionNum: toFraction,
         },
       };
-
-      this.setState({
-        selectedHours: updatedSelectedHours,
-      });
-      return;
     }
 
     const selectingCurrentStart =
       selectedHours.from.fractionNum === selectingFractionNum;
 
     if (selectingCurrentStart) {
-      this.setState({ selectedHours: null });
-      return;
+      return null;
     }
 
     const selectingBeforeCurrentStart =
       selectedHours.from.fractionNum > selectingFractionNum;
 
     if (selectingBeforeCurrentStart) {
-      const updatedSelectedHours = {
+      return {
         from: {
           fractionNum: selectingFractionNum,
         },
@@ -71,18 +105,13 @@ class TimePicker extends PureComponent {
           fractionNum: selectedHours.to.fractionNum,
         },
       };
-
-      console.log(updatedSelectedHours);
-
-      this.setState({ selectedHours: updatedSelectedHours });
-      return;
     }
 
     const selectingAfterCurrentStart =
       selectedHours.from.fractionNum < selectingFractionNum;
 
     if (selectingAfterCurrentStart) {
-      const updatedSelectedHours = {
+      return {
         from: {
           fractionNum: selectedHours.from.fractionNum,
         },
@@ -90,9 +119,9 @@ class TimePicker extends PureComponent {
           fractionNum: selectingFractionNum,
         },
       };
-
-      this.setState({ selectedHours: updatedSelectedHours });
     }
+
+    return null;
   }
 
   checkHoursSelected(selectedhours, fractionNum) {
@@ -109,6 +138,12 @@ class TimePicker extends PureComponent {
   // eslint-disable-next-line class-methods-use-this
   blocksToFractions(blocks) {
     return blocks * 6;
+  }
+
+  // Simple but helps with readability
+  // eslint-disable-next-line class-methods-use-this
+  fractionsToBlocks(fractions) {
+    return fractions / 6;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -167,8 +202,9 @@ class TimePicker extends PureComponent {
             totalFractions,
           ),
         });
-        // implement available hours (light green)
-        // render total selected in last selected
+
+        //  TODO: render total selected in last selected (if this index is equal to last in selected range add total span)
+
         hourBlockFractions.push(
           <button
             key={totalFractions}
@@ -192,8 +228,19 @@ class TimePicker extends PureComponent {
     return hourBlocks;
   }
 
+  // TODO: render errors
+
   render() {
-    return <div className="time-picker">{this.renderTimePickerBody()}</div>;
+    const { validationErrors } = this.state;
+
+    return (
+      <div className="time-picker">
+        {validationErrors.map((error) => (
+          <p>{error}</p>
+        ))}
+        {this.renderTimePickerBody()}
+      </div>
+    );
   }
 }
 

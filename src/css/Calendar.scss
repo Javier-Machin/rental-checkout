@@ -18,13 +18,8 @@
     user-select: none;
   }
 
-  &__cell-btn {
-    pointer-events: none;
-  }
-
   &__cell-btn--available {
     background-color: lightgreen;
-    pointer-events: unset;
     cursor: pointer;
   }
 
