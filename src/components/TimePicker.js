@@ -8,12 +8,21 @@ const SHIFT_START_TIME = 10;
 class TimePicker extends PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      selectedHours: null,
+    };
+
     this.handleHourFractionOnClick = this.handleHourFractionOnClick.bind(this);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   handleHourFractionOnClick({ target }) {
-    console.log(target);
-    console.log(this.props);
+    const isAvailable = target.className.includes('available');
+    if (!isAvailable) return;
+
+    const { selectedHours } = this.state;
+    console.log(target.dataset.fractionnum);
+    console.log(target.textContent);
     // Validate if it's going to exceed maximum booking time
     // (please select a time within {limitTime} hours from initial selection)
 
@@ -25,22 +34,48 @@ class TimePicker extends PureComponent {
 
     // const startSelection if offset set to target, otherwise to first in block hour
     // call selectHourFractions
+    const fromFractionNum = target.dataset.fractionnum;
+
+    if (!selectedHours) {
+      const minFractions = this.blocksToFractions(2);
+      const toFraction = Number(fromFractionNum) + Number(minFractions - 1);
+
+      const updatedSelectedHours = {
+        from: {
+          fractionNum: fromFractionNum,
+        },
+        to: {
+          fractionNum: toFraction,
+        },
+      };
+
+      this.setState({
+        selectedHours: updatedSelectedHours,
+      });
+    }
   }
 
-  // selectHourFractions() {
-  //   get all fractions
-  //   filter all fractions with data-fractionNum smaller than selection
-  //   loop as many tine times as minimum fractions required adding selected class
+  checkHoursSelected(selectedhours, fractionNum) {
+    if (!selectedhours) return false;
 
-  // alt
+    console.log(
+      fractionNum,
+      selectedhours.from.fractionNum,
+      selectedhours.to.fractionNum,
+    );
 
-  // on renderbody, look if the fragment we are going to add should be selected based on its index and our known select start
-  // pass all of them together after creating all fragments to a function that will add the selected (dark green) while required > 0
-  // (if fragments include start)
+    return this.isInRange(
+      fractionNum,
+      selectedhours.from.fractionNum,
+      selectedhours.to.fractionNum,
+    );
+  }
 
-  // calculate required near the start of render
-  // }
-  // blocksToFractions()
+  // Simple but helps with readability
+  // eslint-disable-next-line class-methods-use-this
+  blocksToFractions(blocks) {
+    return blocks * 6;
+  }
 
   // eslint-disable-next-line class-methods-use-this
   isInRange(num, start, end) {
@@ -48,7 +83,7 @@ class TimePicker extends PureComponent {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  checkTimeAvailability(selectedDate, hour, availableHours) {
+  checkHoursAvailability(selectedDate, hour, availableHours) {
     if (!selectedDate) return false;
     const month = selectedDate.getMonth();
 
@@ -61,6 +96,8 @@ class TimePicker extends PureComponent {
   }
 
   renderTimePickerBody() {
+    const { selectedHours } = this.state;
+
     const {
       availableHours = [
         { month: 8, from: 11, to: 15 },
@@ -81,14 +118,19 @@ class TimePicker extends PureComponent {
       for (let hourFraction = 0; hourFraction < 6; hourFraction += 1) {
         const hour = `${SHIFT_START_TIME + shiftHour}`;
         const minutes = String(hourFraction).padEnd(2, '0');
+        totalFractions += 1;
 
         const fractionClass = classnames({
           'time-picker__hour-fraction--with-offset': allowOffset,
           'time-picker__hour-fraction': !allowOffset,
-          'time-picker__hour-fraction--available': this.checkTimeAvailability(
+          'time-picker__hour-fraction--available': this.checkHoursAvailability(
             selectedDate,
             hour,
             availableHours,
+          ),
+          'time-picker__hour-fraction--selected': this.checkHoursSelected(
+            selectedHours,
+            totalFractions,
           ),
         });
         // implement available hours (light green)
@@ -104,8 +146,6 @@ class TimePicker extends PureComponent {
             <span className="hour-fraction__text">{`${hour}:${minutes}`}</span>
           </button>,
         );
-
-        totalFractions += 1;
       }
 
       hourBlocks.push(

@@ -38,4 +38,8 @@
   &__hour-fraction--available {
     background-color: lightgreen;
   }
+
+  &__hour-fraction--selected {
+    background-color: darkgreen;
+  }
 }
