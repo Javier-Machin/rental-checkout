@@ -1,0 +1,12 @@
+.numeric-field__label{display:flex;flex-direction:column;font-size:13px}.numeric-field__input{border-radius:2px;border:1px solid lightgray;padding:0.75rem;margin-top:5px;font-size:16px}
+
+.calendar{height:320px;background-color:white;text-align:center;letter-spacing:1px;vertical-align:middle;font-size:12px;text-transform:uppercase}.calendar__cells{display:grid;grid-template-rows:1fr repeat(6, 2fr);grid-template-columns:repeat(7, 1fr);height:250px}.calendar__empty-cell{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.calendar__cell-btn--available{background-color:lightgreen;cursor:pointer}.calendar__arrows{display:flex;justify-content:space-evenly;max-width:150px;margin:0 auto 10px auto}.calendar__arrow{cursor:pointer}
+
+.time-picker{margin-top:1rem;grid-template-rows:repeat(8, 1fr);grid-template-columns:1fr}.time-picker__hour-block{width:100%;margin-top:5px;background-color:white;z-index:0}.time-picker__hour-fraction--with-offset{width:100%;background-color:white;border:none;text-align:left;border:0 solid lightgrey;padding:0 5px;cursor:pointer}.time-picker__hour-fraction--with-offset{border-bottom-width:1px;font-size:16px;padding:5px}.time-picker__hour-fraction:not(:first-child){cursor:default}.time-picker__hour-fraction:not(:first-child) .hour-fraction__text{visibility:hidden}.time-picker__hour-fraction--available{background-color:lightgreen}.time-picker__hour-fraction--selected{background-color:darkgreen}
+
+.rental-checkout{width:350px;background:lightblue;margin:0 auto;border-radius:5px;padding:0.75rem}.rental-checkout__form .input-fields{display:grid;grid-template-rows:repeat(5, 1fr);grid-template-columns:repeat(2, 1fr);row-gap:5px;-moz-column-gap:10px;column-gap:10px;margin-bottom:10px}.rental-checkout__form--submit{width:100%;margin-top:10px;border:4px solid white;background-color:lightgreen;font-weight:bolder;color:#464646;padding:1rem;font-size:18px;letter-spacing:2px;cursor:pointer}.rental-checkout__validation-error{background-color:#f85959;color:white;border:1px solid red;width:100%;text-align:center;font-size:20px;padding:1rem;position:fixed;top:0;left:0}
+
+.main-container{font-family:sans-serif}.main-container :disabled{background-color:#e6e6e6}
+
+
+/*# sourceMappingURL=main.css.map*/
