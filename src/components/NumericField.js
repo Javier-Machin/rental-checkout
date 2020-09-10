@@ -1,14 +1,8 @@
 import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import '../css/NumericField.scss';
 
-const NumericField = ({
-  name,
-  min = 1,
-  max = 10,
-  disabled,
-  label,
-  defaultValue,
-}) => {
+const NumericField = ({ name, min, max, disabled, label, defaultValue }) => {
   return (
     <div className="numeric-field">
       <label className="numeric-field__label" htmlFor={name}>
@@ -28,8 +22,21 @@ const NumericField = ({
   );
 };
 
-// prop defaults
+NumericField.defaultProps = {
+  min: 1,
+  max: 10,
+  disabled: false,
+  label: '',
+  defaultValue: null,
+};
 
-// prop validation
+NumericField.propTypes = {
+  name: PropTypes.string.isRequired,
+  min: PropTypes.number,
+  max: PropTypes.number,
+  disabled: PropTypes.bool,
+  label: PropTypes.string,
+  defaultValue: PropTypes.number,
+};
 
 export default memo(NumericField);

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import NumericField from './NumericField';
 import Calendar from './calendar';
 import TimePicker from './TimePicker';
+
 import '../css/RentalCheckout.scss';
 
 class RentalCheckout extends Component {
@@ -14,12 +16,18 @@ class RentalCheckout extends Component {
       calendarDate: now,
       calendarVisible: true,
       timePickerVisible: false,
+      validationErrors: [],
     };
 
     this.handleCalendarCellOnClick = this.handleCalendarCellOnClick.bind(this);
     this.handleCalendarArrowOnClick = this.handleCalendarArrowOnClick.bind(
       this,
     );
+    this.setValidationErrors = this.setValidationErrors.bind(this);
+  }
+
+  setValidationErrors(errors) {
+    this.setState({ validationErrors: errors });
   }
 
   handleCalendarCellOnClick({ target }) {
@@ -55,6 +63,18 @@ class RentalCheckout extends Component {
     this.setState({ calendarDate });
   }
 
+  renderValidationErrors() {
+    const { validationErrors } = this.state;
+
+    return validationErrors.map((error) => {
+      return (
+        <p key={uuidv4()} className="rental-checkout__validation-error">
+          {error}
+        </p>
+      );
+    });
+  }
+
   render() {
     const {
       selectedDate,
@@ -63,11 +83,12 @@ class RentalCheckout extends Component {
       timePickerVisible,
     } = this.state;
 
-    // TODO: implement TextField
     // TODO: implement form submission
+    // TODO: add a few tests
 
     return (
       <aside className="rental-checkout">
+        {this.renderValidationErrors()}
         <form className="rental-checkout__form">
           <div className="input-fields">
             <NumericField name="adults" label="Adults going" />
@@ -76,28 +97,32 @@ class RentalCheckout extends Component {
             <NumericField
               name="canoe-price"
               label="Price per 1 hour"
-              defaultValue="25.34"
+              defaultValue={25.34}
+              max={100}
               disabled
             />
             <NumericField name="double-sit" label="Double sit on top kayaks" />
             <NumericField
               name="double-sit-price"
               label="Price per 1 hour"
-              defaultValue="25.34"
+              defaultValue={25.34}
+              max={100}
               disabled
             />
             <NumericField name="katakanus" label="Katakanu (4 - 6 people)" />
             <NumericField
               name="katakanu-price"
               label="Price per 1 hour"
-              defaultValue="25.34"
+              defaultValue={25.34}
+              max={100}
               disabled
             />
             <NumericField name="single-sit" label="Single sit on top kayaks" />
             <NumericField
               name="canoe-price"
               label="Price per 1 hour"
-              defaultValue="25.34"
+              defaultValue={25.34}
+              max={100}
               disabled
             />
           </div>
@@ -113,7 +138,18 @@ class RentalCheckout extends Component {
               { year: 2020, month: 9, from: 5, to: 9 },
             ]}
           />
-          {timePickerVisible && <TimePicker selectedDate={selectedDate} />}
+          {timePickerVisible && (
+            <TimePicker
+              selectedDate={selectedDate}
+              minHours={2}
+              maxHours={3}
+              setValidationErrors={this.setValidationErrors}
+              availableHours={[
+                { month: 8, from: 11, to: 15 },
+                { month: 9, from: 12, to: 16 },
+              ]}
+            />
+          )}
         </form>
       </aside>
     );
