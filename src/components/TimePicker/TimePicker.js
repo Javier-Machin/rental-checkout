@@ -1,66 +1,19 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import '../css/TimePicker.scss';
+import isInRange from '../../helpers';
+import { validateHoursSelection } from './helpers';
+import '../../css/TimePicker.scss';
 
 // Let's pretend the service is open from 10:00 AM to 6:00 PM
 const SHIFT_START_TIME = 10;
-const SHIFT_END_TIME = 18;
 
 class TimePicker extends PureComponent {
   constructor(props) {
     super(props);
 
     this.handleHourFractionOnClick = this.handleHourFractionOnClick.bind(this);
-    this.validateHoursSelection = this.validateHoursSelection.bind(this);
-  }
-
-  validateHoursSelection(updatedSelectedHours) {
-    if (!updatedSelectedHours) return true;
-    const { setValidationErrors } = this.props;
-
-    const { minHours, maxHours } = this.props;
-    const { from, to } = updatedSelectedHours;
-    let errorMessage = '';
-
-    const totalFractionsSelected = to.fractionNum - from.fractionNum;
-    const totalHoursSelected = this.fractionsToBlocks(totalFractionsSelected);
-
-    // Exceeds maximum booking time validation
-
-    const exceedsMaxBookingTime = totalHoursSelected > maxHours;
-    if (exceedsMaxBookingTime) {
-      errorMessage = `Selection exceeds the maximum booking time, please select a time within ${maxHours} hours from the start`;
-    }
-
-    // Below minimum booking time validation
-
-    const belowMinBookingTime = totalHoursSelected < minHours;
-    if (belowMinBookingTime && !errorMessage) {
-      errorMessage = `Selection is below the minimum booking time, please select a time ${minHours} hours from the start or more`;
-    }
-
-    // Exceeds opening hours validation
-
-    const shiftEndDateObject = new Date();
-    shiftEndDateObject.setMinutes(0);
-    shiftEndDateObject.setHours(SHIFT_END_TIME);
-
-    const fractionTime = this.fractionNumToTime(from.fractionNum);
-    this.addHoursToDate(fractionTime, minHours);
-
-    const exceedsShiftTime = fractionTime > shiftEndDateObject;
-
-    if (exceedsShiftTime) {
-      errorMessage = `Selection goes beyond opening hours, please select a start time ${minHours} hours earlier than ${SHIFT_END_TIME}:00`;
-    }
-
-    if (errorMessage) {
-      setValidationErrors([errorMessage]);
-      return false;
-    }
-
-    return true;
+    this.validateHoursSelection = validateHoursSelection.bind(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -159,10 +112,11 @@ class TimePicker extends PureComponent {
     return fractionTime;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   checkHoursSelected(selectedhours, fractionNum) {
     if (!selectedhours) return false;
 
-    return this.isInRange(
+    return isInRange(
       fractionNum,
       selectedhours.from.fractionNum,
       selectedhours.to.fractionNum,
@@ -182,11 +136,6 @@ class TimePicker extends PureComponent {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  isInRange(num, start, end) {
-    return num >= start && num <= end;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
   checkHoursAvailability(selectedDate, hour, availableHours) {
     if (!selectedDate) return false;
     const month = selectedDate.getMonth();
@@ -194,7 +143,7 @@ class TimePicker extends PureComponent {
     return availableHours.some((availabilityWindow) => {
       return (
         month === availabilityWindow.month &&
-        this.isInRange(hour, availabilityWindow.from, availabilityWindow.to)
+        isInRange(hour, availabilityWindow.from, availabilityWindow.to)
       );
     });
   }
@@ -260,10 +209,16 @@ TimePicker.defaultProps = {
   selectedHours: null,
 };
 
+/*
+  disabling eslint check for some props because it doesn't know 
+  about our tidy helpers folder (:
+*/
+
 TimePicker.propTypes = {
   setValidationErrors: PropTypes.func.isRequired,
   setSelectedHours: PropTypes.func.isRequired,
   minHours: PropTypes.number,
+  // eslint-disable-next-line react/no-unused-prop-types
   maxHours: PropTypes.number,
   availableHours: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedDate: PropTypes.object.isRequired,

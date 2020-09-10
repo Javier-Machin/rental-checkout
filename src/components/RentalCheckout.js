@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import NumericField from './NumericField';
-import Calendar from './calendar';
-import TimePicker from './TimePicker';
+import Calendar from './Calendar';
+import TimePicker from './TimePicker/TimePicker';
 
 import '../css/RentalCheckout.scss';
 

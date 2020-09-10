@@ -1,9 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
+import isInRange from '../../../helpers';
 
-function isInRange(num, start, end) {
-  return num >= start && num <= end;
-}
+// Helpers specific to the calendar
 
 function checkDateAvailability(date, availableDates) {
   const year = date.getFullYear();
