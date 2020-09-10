@@ -10,9 +10,6 @@ const SHIFT_END_TIME = 18;
 class TimePicker extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      selectedHours: null,
-    };
 
     this.handleHourFractionOnClick = this.handleHourFractionOnClick.bind(this);
     this.validateHoursSelection = this.validateHoursSelection.bind(this);
@@ -72,11 +69,10 @@ class TimePicker extends PureComponent {
   }
 
   handleHourFractionOnClick({ target }) {
-    const { setValidationErrors } = this.props;
     const isAvailable = target.className.includes('available');
     if (!isAvailable) return;
 
-    const { selectedHours } = this.state;
+    const { setValidationErrors, selectedHours, setSelectedHours } = this.props;
     const selectingFractionNum = Number(target.dataset.fractionnum);
 
     const updatedSelectedHours = this.updateHoursSelection(
@@ -90,9 +86,7 @@ class TimePicker extends PureComponent {
 
     if (selectedHoursAreValid) {
       setValidationErrors([]);
-      this.setState({
-        selectedHours: updatedSelectedHours,
-      });
+      setSelectedHours(updatedSelectedHours);
     }
   }
 
@@ -206,9 +200,7 @@ class TimePicker extends PureComponent {
   }
 
   renderTimePickerBody() {
-    // TODO move to RentalCheckout
-    const { selectedHours } = this.state;
-    const { availableHours, selectedDate } = this.props;
+    const { availableHours, selectedDate, selectedHours } = this.props;
 
     const hourBlocks = [];
     let totalFractions = 0;
@@ -265,14 +257,17 @@ class TimePicker extends PureComponent {
 TimePicker.defaultProps = {
   minHours: 2,
   maxHours: 4,
+  selectedHours: null,
 };
 
 TimePicker.propTypes = {
   setValidationErrors: PropTypes.func.isRequired,
+  setSelectedHours: PropTypes.func.isRequired,
   minHours: PropTypes.number,
   maxHours: PropTypes.number,
   availableHours: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedDate: PropTypes.object.isRequired,
+  selectedHours: PropTypes.object,
 };
 
 export default TimePicker;

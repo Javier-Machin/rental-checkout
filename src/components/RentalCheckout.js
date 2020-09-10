@@ -13,6 +13,7 @@ class RentalCheckout extends Component {
 
     this.state = {
       selectedDate: null,
+      selectedHours: null,
       calendarDate: now,
       calendarVisible: true,
       timePickerVisible: false,
@@ -24,10 +25,15 @@ class RentalCheckout extends Component {
       this,
     );
     this.setValidationErrors = this.setValidationErrors.bind(this);
+    this.setSelectedHours = this.setSelectedHours.bind(this);
   }
 
   setValidationErrors(errors) {
     this.setState({ validationErrors: errors });
+  }
+
+  setSelectedHours(selectedHours) {
+    this.setState({ selectedHours });
   }
 
   handleCalendarCellOnClick({ target }) {
@@ -78,6 +84,7 @@ class RentalCheckout extends Component {
   render() {
     const {
       selectedDate,
+      selectedHours,
       calendarDate,
       calendarVisible,
       timePickerVisible,
@@ -141,9 +148,11 @@ class RentalCheckout extends Component {
           {timePickerVisible && (
             <TimePicker
               selectedDate={selectedDate}
+              selectedHours={selectedHours}
               minHours={2}
               maxHours={3}
               setValidationErrors={this.setValidationErrors}
+              setSelectedHours={this.setSelectedHours}
               availableHours={[
                 { month: 8, from: 11, to: 15 },
                 { month: 9, from: 12, to: 16 },
