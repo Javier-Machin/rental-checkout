@@ -97,7 +97,7 @@ class RentalCheckout extends Component {
               { year: 2020, month: 9, from: 5, to: 9 },
             ]}
           />
-          <TimePicker />
+          <TimePicker selectedDate={selectedDate} />
         </form>
       </aside>
     );

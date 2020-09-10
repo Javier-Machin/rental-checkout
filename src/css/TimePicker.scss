@@ -4,8 +4,38 @@
   grid-template-columns: 1fr;
 
   &__hour-block {
-    height: 100px;
+    width: 100%;
     margin-top: 5px;
     background-color: white;
+    z-index: 0;
+  }
+
+  &__hour-fraction,
+  &__hour-fraction--with-offset {
+    width: 100%;
+    background-color: white;
+    border: none;
+    text-align: left;
+    border: 0 solid lightgrey;
+    padding: 0 5px;
+    cursor: pointer;
+  }
+
+  &__hour-fraction--with-offset {
+    border-bottom-width: 1px;
+    font-size: 16px;
+    padding: 5px;
+  }
+
+  &__hour-fraction:not(:first-child) {
+    cursor: default;
+
+    .hour-fraction__text {
+      visibility: hidden;
+    }
+  }
+
+  &__hour-fraction--available {
+    background-color: lightgreen;
   }
 }

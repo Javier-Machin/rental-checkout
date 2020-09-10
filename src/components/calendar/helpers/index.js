@@ -6,11 +6,11 @@ function isInRange(num, start, end) {
 }
 
 function checkDateAvailability(date, availableDates) {
-  return availableDates.some((availabilityWindow) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const day = date.getDate();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
 
+  return availableDates.some((availabilityWindow) => {
     return (
       year === availabilityWindow.year &&
       month === availabilityWindow.month &&
@@ -20,7 +20,11 @@ function checkDateAvailability(date, availableDates) {
 }
 
 function renderCalendarBody() {
-  const { calendarDate: date, availableDates, handleCellOnClick } = this.props;
+  const {
+    calendarDate: date,
+    availableDates,
+    handleCalendarCellOnClick,
+  } = this.props;
   const cells = [];
 
   const month = date.getMonth();
@@ -56,7 +60,7 @@ function renderCalendarBody() {
           <button
             className={cellClasses}
             type="button"
-            onClick={handleCellOnClick}
+            onClick={handleCalendarCellOnClick}
             name={tempDateValue}
             key={`${row}${weekDay}`}
           >
