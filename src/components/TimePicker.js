@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import classnames from 'classnames';
+import { v4 as uuidv4 } from 'uuid';
 import '../css/TimePicker.scss';
 
 // Let's pretend the normal start time for the service is 10:00 AM
@@ -15,11 +16,13 @@ class TimePicker extends PureComponent {
 
     this.handleHourFractionOnClick = this.handleHourFractionOnClick.bind(this);
     this.validateHoursSelection = this.validateHoursSelection.bind(this);
+    this.renderValidationErrors = this.renderValidationErrors.bind(this);
   }
 
   validateHoursSelection(updatedSelectedHours) {
     if (!updatedSelectedHours) return true;
-    const { minHours = 2, maxHours = 4 } = this.props;
+    const { minHours = 2, maxHours = 3 } = this.props;
+    let errorMessage = '';
 
     const totalFractionsSelected =
       updatedSelectedHours.to.fractionNum -
@@ -27,10 +30,18 @@ class TimePicker extends PureComponent {
 
     const totalHoursSelected = this.fractionsToBlocks(totalFractionsSelected);
 
-    const exceedsShiftHours = totalHoursSelected > maxHours;
+    const exceedsMaxBookingTime = totalHoursSelected > maxHours;
+    const belowMinBookingTime = totalHoursSelected < minHours;
 
-    if (exceedsShiftHours) {
-      const errorMessage = `Exceeds maximum booking time, please select a time within ${maxHours} hours from the start`;
+    if (exceedsMaxBookingTime) {
+      errorMessage = `Selection exceeds the maximum booking time, please select a time within ${maxHours} hours from the start`;
+    }
+
+    if (belowMinBookingTime && !errorMessage) {
+      errorMessage = `Selection is below the minimum booking time, please select a time ${minHours} hours from the start or more`;
+    }
+
+    if (errorMessage) {
       this.setState({ validationErrors: [errorMessage] });
       return false;
     }
@@ -65,6 +76,7 @@ class TimePicker extends PureComponent {
     if (selectedHoursAreValid) {
       this.setState({
         selectedHours: updatedSelectedHours,
+        validationErrors: [],
       });
     }
   }
@@ -227,17 +239,26 @@ class TimePicker extends PureComponent {
 
     return hourBlocks;
   }
+  // TODO: move to RentalCheckout, make fixed
+
+  renderValidationErrors() {
+    const { validationErrors } = this.state;
+
+    return validationErrors.map((error, index) => {
+      return (
+        <p key={uuidv4()} className="rental-checkout__validation-error">
+          {error}
+        </p>
+      );
+    });
+  }
 
   // TODO: render errors
 
   render() {
-    const { validationErrors } = this.state;
-
     return (
       <div className="time-picker">
-        {validationErrors.map((error) => (
-          <p>{error}</p>
-        ))}
+        {this.renderValidationErrors()}
         {this.renderTimePickerBody()}
       </div>
     );

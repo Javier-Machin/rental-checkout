@@ -64,6 +64,7 @@ class RentalCheckout extends Component {
     } = this.state;
 
     // TODO: implement TextField
+    // TODO: implement form submission
 
     return (
       <aside className="rental-checkout">
