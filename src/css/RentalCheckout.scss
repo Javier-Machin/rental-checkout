@@ -14,6 +14,19 @@
       column-gap: 10px;
       margin-bottom: 10px;
     }
+
+    &--submit {
+      width: 100%;
+      margin-top: 10px;
+      border: 4px solid white;
+      background-color: lightgreen;
+      font-weight: bolder;
+      color: rgb(70, 70, 70);
+      padding: 1rem;
+      font-size: 18px;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
   }
 
   &__validation-error {

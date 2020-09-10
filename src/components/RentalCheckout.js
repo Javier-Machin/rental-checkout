@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import NumericField from './NumericField';
 import Calendar from './Calendar';
 import TimePicker from './TimePicker/TimePicker';
+import { fractionNumToTime } from './TimePicker/helpers';
+import { addMinutesToDate } from '../helpers';
 
 import '../css/RentalCheckout.scss';
 
@@ -26,6 +28,7 @@ class RentalCheckout extends Component {
     );
     this.setValidationErrors = this.setValidationErrors.bind(this);
     this.setSelectedHours = this.setSelectedHours.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   setValidationErrors(errors) {
@@ -69,6 +72,34 @@ class RentalCheckout extends Component {
     this.setState({ calendarDate });
   }
 
+  handleFormSubmit(event) {
+    event.preventDefault();
+    const { selectedDate, selectedHours } = this.state;
+    const { from, to } = selectedHours;
+
+    const { fractionNum: selectedStartTimeFraction } = from;
+    const { fractionNum: selectedEndTimeFraction } = to;
+
+    const formData = new FormData(event.target).entries();
+    const inputFields = Object.fromEntries(formData);
+    const startTime = fractionNumToTime(selectedStartTimeFraction);
+    const endingTime = fractionNumToTime(selectedEndTimeFraction);
+
+    // Add 10 minutes from the ending time fraction
+    addMinutesToDate(endingTime, 10);
+
+    const data = {
+      ...inputFields,
+      selectedDate,
+      selectedHours: {
+        from: startTime,
+        to: endingTime,
+      },
+    };
+
+    console.log(data);
+  }
+
   renderValidationErrors() {
     const { validationErrors } = this.state;
 
@@ -90,16 +121,18 @@ class RentalCheckout extends Component {
       timePickerVisible,
     } = this.state;
 
-    // TODO: implement form submission
     // TODO: add a few tests
 
     return (
       <aside className="rental-checkout">
         {this.renderValidationErrors()}
-        <form className="rental-checkout__form">
+        <form
+          className="rental-checkout__form"
+          onSubmit={this.handleFormSubmit}
+        >
           <div className="input-fields">
             <NumericField name="adults" label="Adults going" />
-            <NumericField name="kids" label="Under 16s going" />
+            <NumericField min={0} name="kids" label="Under 16s going" />
             <NumericField name="canoes" label="Canoes (2 people)" />
             <NumericField
               name="canoe-price"
@@ -159,6 +192,9 @@ class RentalCheckout extends Component {
               ]}
             />
           )}
+          <button type="submit" className="rental-checkout__form--submit">
+            SUBMIT
+          </button>
         </form>
       </aside>
     );

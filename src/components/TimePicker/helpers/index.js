@@ -49,7 +49,7 @@ function validateHoursSelection(updatedSelectedHours) {
 
   const exceedsMaxBookingTime = totalHoursSelected > maxHours;
   if (exceedsMaxBookingTime) {
-    errorMessage = `Selection exceeds the maximum booking time, please select a time within ${maxHours} hours from the start`;
+    errorMessage = `Selection exceeds the maximum booking time, please select a maximum of ${maxHours} hours`;
   }
 
   // Below minimum booking time validation

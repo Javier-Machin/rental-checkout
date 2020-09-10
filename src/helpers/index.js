@@ -8,4 +8,8 @@ const addHoursToDate = (date, hours) => {
   date.setTime(date.getTime() + hours * 60 * 60 * 1000);
 };
 
-export { isInRange, addHoursToDate };
+const addMinutesToDate = (date, minutes) => {
+  date.setTime(date.getTime() + minutes * 60 * 1000);
+};
+
+export { isInRange, addHoursToDate, addMinutesToDate };
