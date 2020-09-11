@@ -113,7 +113,7 @@ A test interacting with the UI and a test with just Jest are also included in th
 
 So everything went perfectly? Nope.  
 
-For starters the ability to provide a custom value for the implements didn't make it due to time constraints (self-imposed I know).  
+For starters the ability to provide a custom value for the increments didn't make it due to time constraints (self-imposed I know).  
 The current implementation has a pretty good separation of concerns so I don't see implementing it much of a problem. 
  
 The calendar is quite simple but it wasn't as straight forward to build as I expected (first time making one).
