@@ -109,6 +109,27 @@ Open the index with your browser to explore it.
 In the test folder a spec file can be found containing testing-library tests with different queries and matchers.
 A test interacting with the UI and a test with just Jest are also included in the file.
 
+# Data generated
+
+Sending the form produces an object with this structure:
+```
+{
+  adults: "3"
+  canoes: "2"
+  double-sit: "1"
+  katakanus: "1"
+  kids: "2"
+  single-sit: "3"
+  selectedDate: "2020-10-07T01:53:03.117Z"
+  selectedHours: {
+    from: "2020-09-11T12:20:09.439Z"
+    to: "2020-09-11T14:20:09.439Z"
+  }
+}
+```
+
+It also gets logged to the console.
+
 # Wrapping up
 
 So everything went perfectly? Nope.  
