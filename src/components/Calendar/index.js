@@ -5,8 +5,8 @@ import { renderCalendarBody, currentMonthAndYear } from './helpers';
 import '../../css/Calendar.scss';
 
 class Calendar extends PureComponent {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.renderCalendarBody = renderCalendarBody.bind(this);
     this.currentMonthAndYear = currentMonthAndYear.bind(this);
   }

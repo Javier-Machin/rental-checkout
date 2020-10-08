@@ -167,6 +167,8 @@ export {
   fractionNumToTime,
   checkHoursSelected,
   checkHoursAvailability,
+  blocksToFractions,
+  fractionsToBlocks,
   SHIFT_START_TIME,
   SHIFT_END_TIME,
   HOUR_BLOCK_FRACTIONS,

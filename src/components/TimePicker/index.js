@@ -13,8 +13,8 @@ import {
 import '../../css/TimePicker.scss';
 
 class TimePicker extends PureComponent {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.handleHourFractionOnClick = this.handleHourFractionOnClick.bind(this);
     this.updateHoursSelection = updateHoursSelection.bind(this);

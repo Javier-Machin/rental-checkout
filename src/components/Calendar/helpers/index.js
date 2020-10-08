@@ -85,4 +85,4 @@ function currentMonthAndYear() {
   return `${monthName} ${year}`;
 }
 
-export { renderCalendarBody, currentMonthAndYear };
+export { renderCalendarBody, currentMonthAndYear, checkDateAvailability };
